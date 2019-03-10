@@ -1,0 +1,40 @@
+library(dplyr)
+
+#build the dataset from the saved test and train set created earlier
+#update the column names to something typable
+#divide the data by photograph and non photograph data
+#drop unuseable data
+#create factor vectors 
+
+#scale data
+
+test.data.set <- read.csv("E:/testdataset2.csv")
+train.data.set <- read.csv("E:/totaldataset.csv")
+
+colnames(test.data.set)[colnames(test.data.set)=="Ã¯..Type"] <- "Type"
+colnames(train.data.set)[colnames(train.data.set)=="Ã¯..Type"] <- "Type"
+
+test.data.set <- test.data.set[,order(names(test.data.set))]
+train.data.set <- train.data.set[,order(names(train.data.set))]
+test.data.set <- test.data.set[complete.cases(test.data.set),]
+train.data.set <- train.data.set[complete.cases(train.data.set),]
+
+droplist3 <- c("X","Description", "PetID", "RescuerID", "Name", "Breed1", "Breed2", "State", "Color1", "Color2", "Color3")
+train.adoptspeed <- as.factor(train.data.set$AdoptionSpeed)
+test.adoptspeed <- as.factor(test.data.set$AdoptionSpeed)
+train.data.set <- select(train.data.set, -c(droplist3))
+test.data.set <- select(test.data.set, -c(droplist3))
+
+name.set <- c("AdoptionSpeed", "Sterilized", "Dewormed", "FurLength", "Gender", "Health", "Type", "MaturitySize", "Vaccinated")
+
+#name.set <- c("AdoptionSpeed", "Sterilized", "Dewormed", "FurLength", "Gender", "Health", "Type", "MaturitySize","Vaccinated")
+
+for(i in 1:length(name.set)) { j = name.set[i]
+
+train.data.set[,j] <- as.factor(train.data.set[,j])
+test.data.set[,j] <- as.factor(test.data.set[,j])
+
+levels(test.data.set[,j]) <- levels(train.data.set[,j])
+levels(train.data.set[,j]) <- levels(test.data.set[,j])
+
+}
